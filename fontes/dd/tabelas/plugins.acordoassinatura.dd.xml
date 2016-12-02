@@ -1,0 +1,73 @@
+<?xml version="1.0" standalone="yes" ?>
+<table name="plugins.acordoassinatura" description="Informacoes da assinatura dos contratos" prefix="" label="Assinatura Contrato" type="0">
+  <fields>
+    <field name="sequencial"
+           conteudo="int4"
+           description="Sequencial"
+           inivalue="0"
+           label="Sequencial"
+           size="10"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           labelrel="Sequencial"
+           reference=""
+           ispk="t"
+           hassequence="t">
+      <sequence name="plugins.acordoassinatura_sequencial_seq"></sequence>
+    </field>
+    <field name="acordomovimentacao"
+           conteudo="int4"
+           description="Movimentação do Acordo"
+           inivalue="0"
+           label="Movimentação do Acordo"
+           size="10"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           labelrel="Movimentação do Acordo"
+           reference=""
+           ispk="f"
+           hassequence="f">
+    </field>
+    <field name="contratante"
+           conteudo="int4"
+           description="Matricula do funcionário contratante"
+           inivalue="0"
+           label="Contratante"
+           size="10"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           labelrel="Contratante"
+           reference=""
+           ispk="f"
+           hassequence="f">
+    </field>
+    <field name="representante"
+           label="Representante"
+           labelrel="Representante"
+           description="Representante da empresa do contrato"
+           conteudo="varchar"
+           inivalue=""
+           size="50"
+           null="f"
+           uppercase="f"
+           autocompl="f"
+           aceitatipo="1"
+           tipoobj="text"
+           reference=""
+           ispk="f"
+           hassequence="f">
+    </field>
+  </fields>
+  <primarykey>
+    <fieldpk name="sequencial"></fieldpk>
+  </primarykey>
+</table>

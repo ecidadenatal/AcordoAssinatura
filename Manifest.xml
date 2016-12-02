@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <plugin name="AcordoAssinatura" label="Assinatura dos Contratos" plugin-version="1.0" ecidade-version="2.3.47" id-modulo="8251">
+   <id id="AcordoAssinatura"> </id>
+   <files>
+     <!-- classe -->
+     <file name="db_acordoassinatura_classe.php"    path="/classes/db_acordoassinatura_classe.php" />
+     <!-- outro -->
+     <file name="AcordoAssinatura.xml"             path="/modification/xml/AcordoAssinatura.xml" />
+     <file name="plugins.acordoassinatura.dd.xml"  path="/dd/tabelas/plugins.acordoassinatura.dd.xml" />
+   </files>
+   
+   <estrutura install="/instalacao.sql" uninstall="/desinstalacao.sql" ></estrutura>
+  </plugin>
+</manifest>

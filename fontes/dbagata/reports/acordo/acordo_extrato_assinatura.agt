@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+<Report>
+    <Version>7.4</Version>
+    <Properties>
+        <Title></Title>
+        <Author></Author>
+        <Date></Date>
+    </Properties>
+    <Parameters>
+        <iAcordo>
+            <mask></mask>
+            <value></value>
+            <label>Sequencial Acordo</label>
+            <options></options>
+        </iAcordo>
+    </Parameters>
+    <Header>
+        <Body></Body>
+    </Header>
+    <Footer>
+        <Body></Body>
+    </Footer>
+    <DataSet>
+        <DataSource>
+            <Name>timeB</Name>
+        </DataSource>
+        <Query>
+            <Select>ac16_numeroacordo           as numero_acordo,
+                    ac16_anousu                 as ano_acordo,
+                    ac16_lei                    as lei,
+                    ac16_datainicio             as vigencia_inicial,
+                    ac16_datafim                as vigencia_final,
+                    ac16_dataassinatura         as data_assinatura,
+                    ac16_objeto                 as objeto,
+                    ac16_numeroprocesso         as numero_processo,
+                    cgm_favorecido.z01_nome     as cgm_favorecido,
+                    ac16_valor                  as valor,
+                    nomeresponsavel             as responsavel_departamento,
+                    nomeinst                    as instituicao,
+                    munic                       as municipio,
+                    o41_orgao||'.'||o41_unidade as orgao_unidade,
+                    o41_descr                   as unidade_descricao,
+                    acordoassinatura.representante,
+                    acordoassinatura.contratante,
+                    cgm_contratante.z01_nome as nome_contratante, 
+                    substr(ac16_dataassinatura, 9, 2) as data_assinatura_dia,
+                    substr(ac16_dataassinatura, 6, 2) as data_assinatura_mes,
+                    substr(ac16_dataassinatura, 1, 4) as data_assinatura_ano
+                    </Select>
+              <From>acordo 
+                    inner join db_depart                    on acordo.ac16_deptoresponsavel                   = db_depart.coddepto 
+                    inner join db_departorg                 on db_departorg.db01_coddepto                     = db_depart.coddepto
+                                                           and db_departorg.db01_anousu                       = acordo.ac16_anousu
+                    inner join orcunidade                   on orcunidade.o41_anousu                          = db_departorg.db01_anousu  
+                                                           and orcunidade.o41_orgao                           = db_departorg.db01_orgao  
+                                                           and orcunidade.o41_unidade                         = db_departorg.db01_unidade
+                                                           and orcunidade.o41_instit                          = acordo.ac16_instit
+                    inner join cgm as cgm_favorecido        on acordo.ac16_contratado                         = cgm_favorecido.z01_numcgm  
+                    inner join db_config                    on ac16_instit                                    = codigo
+                     left join acordomovimentacao           on acordomovimentacao.ac10_acordo                 = acordo.ac16_sequencial
+                                                           and acordomovimentacao.ac10_acordomovimentacaotipo = 2
+                                                           and not exists (select 1 
+                                                                             from acordomovimentacaocancela 
+                                                                            where acordomovimentacaocancela.ac25_acordomovimentacaocancela = acordomovimentacao.ac10_sequencial)
+                     left join plugins.acordoassinatura     on acordoassinatura.acordomovimentacao    = acordomovimentacao.ac10_sequencial
+                     left join rhpessoal                    on rhpessoal.rh01_regist                  = acordoassinatura.contratante
+                     left join cgm as cgm_contratante       on cgm_contratante.z01_numcgm             = rhpessoal.rh01_numcgm</From>
+            <Where>ac16_sequencial = $iAcordo</Where>
+            <GroupBy></GroupBy>
+            <OrderBy></OrderBy>
+        </Query>
+        <Groups>
+            <Config>
+                <ShowGroup>0</ShowGroup>
+                <ShowDetail>1</ShowDetail>
+                <ShowLabel>0</ShowLabel>
+                <ShowNumber>0</ShowNumber>
+                <ShowIndent>1</ShowIndent>
+                <ShowHeader>0</ShowHeader>
+            </Config>
+        </Groups>
+        <Fields>
+            <Column1>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column1>
+            <Column2>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column2>
+            <Column3>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column3>
+            <Column4>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function>/time/a_date_to_br.fun</Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column4>
+            <Column5>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function>/time/a_date_to_br.fun</Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column5>
+            <Column6>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function>/time/a_date_to_br.fun</Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column6>
+            <Column7>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column7>
+            <Column8>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column8>
+            <Column9>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column9>
+            <Column10>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask>#  -9.999,99s</Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column10>
+            <Column11>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column11>
+            <Column12>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column12>
+            <Column13>
+                <Chars>30</Chars>
+                <Points>26</Points>
+                <Align>left</Align>
+                <HeadAlign>left</HeadAlign>
+                <Mask></Mask>
+                <Function></Function>
+                <Cross></Cross>
+                <Conditional></Conditional>
+                <Hidden>0</Hidden>
+            </Column13>
+        </Fields>
+    </DataSet>
+    <PageSetup>
+        <Format></Format>
+        <Orientation>portrait</Orientation>
+        <LeftMargin>40</LeftMargin>
+        <RightMargin>40</RightMargin>
+        <TopMargin>40</TopMargin>
+        <BottomMargin>40</BottomMargin>
+    </PageSetup>
+    <OpenOffice>
+        <Config>
+            <FixedDetails></FixedDetails>
+            <ExpandDetails>1</ExpandDetails>
+            <printEmptyDetail>0</printEmptyDetail>
+            <SumByTotal>1</SumByTotal>
+            <RepeatHeader>1</RepeatHeader>
+            <RepeatFooter>1</RepeatFooter>
+        </Config>
+        <Template></Template>
+        <Details>
+            <detail1>
+                <DataSet>
+                    <Query>
+                        <Select>e60_codemp || ' / ' ||  e60_anousu as empenho,o56_elemento                       as elemento_despesa,o15_descr                          as recurso</Select>
+                        <From>empempenhocontrato         inner join empempenho          on e100_numemp = e60_numemp 				inner join orcdotacao  on  orcdotacao.o58_anousu = empempenho.e60_anousu   				                      and  orcdotacao.o58_coddot = empempenho.e60_coddot   				inner join orctiporec  on  orctiporec.o15_codigo = orcdotacao.o58_codigo   				inner join orcelemento on  orcelemento.o56_codele = orcdotacao.o58_codele  				                      and  orcelemento.o56_anousu = orcdotacao.o58_anousu</From>
+                        <Where>e100_acordo = $iAcordo</Where>
+                        <GroupBy></GroupBy>
+                        <OrderBy>e60_anousu, e60_codemp</OrderBy>
+                    </Query>
+                    <Fields>
+                        <Column1>
+                            <Mask></Mask>
+                            <Function></Function>
+                        </Column1>
+                        <Column2>
+                            <Mask></Mask>
+                            <Function></Function>
+                        </Column2>
+                        <Column3>
+                            <Mask></Mask>
+                            <Function></Function>
+                        </Column3>
+                    </Fields>
+                </DataSet>
+            </detail1>
+        </Details>
+        <Source>acordo_extrato_assinatura.sxw</Source>
+    </OpenOffice>
+</Report>

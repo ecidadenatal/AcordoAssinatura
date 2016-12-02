@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<modification>
+  <name>AssinaturaAcordo</name>
+  <id>AssinaturaAcordo</id>
+  <ecidade-version>2.3.47</ecidade-version>
+  
+  <file path='forms/db_frmacordo.php'>
+    <operation>
+      <search regex="true"><![CDATA[(db_inputdata\('ac16_dataassinatura',.*\n*.*)\$db_opcao]]></search>
+      <add>
+        <![CDATA[$1 3]]>
+      </add>
+    </operation>        
+    
+    <operation>
+      <search regex="true"><![CDATA[placeh.*Ano']]></search>
+      <add>
+        <![CDATA[placeholder='Número/Ano-XX']]>
+      </add>
+    </operation>
+
+    <operation>
+      <search regex="true"><![CDATA[this.value.*replace.*'\$2\$3\$4'\)]]></search>
+      <add>
+        <![CDATA[this.value = this.value.replace(/[^0-9\/\-]/g, '').replace(/(\/?)([0-9]*)(\/?)([0-9]{0,4})(\-?)([0-9]{0,2})(.*)(\/?)/,'\$2\$3\$4\$5\$6')]]>
+      </add>
+    </operation>
+    
+  </file>  
+  
+  <file path='aco4_assinaturacontratosinclusao001.php'>
+    <operation>
+      <search regex="true"><![CDATA[(\$clrotulo->label\(\"ac10_obs\"\);)]]></search>
+      <add>
+        <![CDATA[$1
+//plugin AcordoAssinatura        
+$clrotulo->label("z01_nome");
+//fim plugin AcordoAssinatura
+]]>
+      </add>
+    </operation> 
+    <operation>
+      <search regex="true" flag="U"><![CDATA[(db_inputdata\(("|')ac10_datamovimento((.*\n*)*)<\/tr>)]]></search>
+      <add>
+        <![CDATA[$1
+        
+          <!-- plugin AcordoAssinatura-->
+          <tr>
+	        <td title="<?=@$Trh01_regist?>" align="left">
+	          <?php db_ancora("Contratante", "js_pesquisaMatriculaPessoal(true);",$db_opcao); ?>
+	        </td>
+	        <td align="left">
+	          <?
+              db_input('contratante',15,$Irh01_regist,true,'text',
+                       $db_opcao," onchange='js_pesquisaMatriculaPessoal(false);'");
+              ?>
+            </td>
+            <td><? db_input('nome',40,$Iz01_nome,true,'text',3);?></td>
+	      </tr>
+          <tr>
+            <td align="left"><b>Representante Empresa Contratada: </b></td>
+            <td colspan="2"><? db_input('representante',59,0,true,'text',$db_opcao);?></td>
+          </tr>
+          <!--  fim plugin AcordoAssinatura-->
+]]>
+      </add>
+    </operation>    
+    <operation>
+      <search regex="true"><![CDATA[(function\s*js_assinarContrato\s*\(.*\))]]></search>
+      <add>
+        <![CDATA[
+/*
+ * Plugin AcordoAssinatura
+ */
+ function js_pesquisaMatriculaPessoal(lMostrar) {
+
+	  if (lMostrar == true) {
+	    
+	    var sUrl = 'func_rhpessoal.php?funcao_js=parent.mostraMatriculaPessoal1|rh01_regist|z01_nome';
+	    js_OpenJanelaIframe('', 
+	                        'db_iframe_rhpessoal', 
+	                        sUrl,
+	                        'Pesquisar Pessoal',
+	                        true);
+	  } else {
+	  
+	    if ($('contratante').value != '') { 
+	    
+	      var sUrl = 'func_rhpessoal.php?pesquisa_chave='+$('contratante').value+
+	                 '&funcao_js=parent.mostraMatriculaPessoal';
+	                 
+	      js_OpenJanelaIframe('',
+	                          'db_iframe_rhpessoal',
+	                          sUrl,
+	                          'Pesquisar Pessoal',
+	                          false);
+	     } else {
+	       $('contratante').value = ''; 
+	     }
+	  }
+	}
+
+	function mostraMatriculaPessoal(chave1,erro) {
+	 
+	  if (erro == true) {
+	   
+	    $('contratante').value   = ''; 
+	    $('nome').value = chave1;
+	    $('contratante').focus(); 
+	  } else {
+	    $('nome').value = chave1;
+	  }
+	}
+
+	function mostraMatriculaPessoal1(chave1,chave2) {
+
+	  $('contratante').value    = chave1;
+	  $('nome').value  = chave2;
+	  db_iframe_rhpessoal.hide();
+	}
+ /*
+  * FIM Plugin AcordoAssinatura
+  */	        
+        
+$1]]>
+      </add>
+    </operation>
+<operation>
+      <search regex="true"><![CDATA[(js_divCarregando\('Aguarde incluindo assinatura...','msgBoxAssianturaContrato'\);)]]></search>
+      <add>
+        <![CDATA[
+  if ($('contratante').value == '') {
+	    
+	    alert('Contratante não informado!');
+	    return false;
+  }
+  
+  if ($('representante').value == '') {
+  	    
+  	    alert('Representante não informado!');
+  	    return false;
+  }
+
+
+  if ($('ac10_obs').value == '') {
+	    
+	    alert('Observação não informada!');
+	    return false;
+  }
+  
+  $1]]>
+      </add>
+    </operation>    
+    <operation>
+      <search regex="true"><![CDATA[(oParam.observacao\s*=\s*encodeURIComponent\(tagString\(\$F\(('|")ac10_obs('|")\)\)\);)]]></search>
+      <add>
+        <![CDATA[$1
+  //plugin AssinaturaAcordo        
+  oParam.representante = encodeURIComponent(tagString($F('representante')));
+  oParam.contratante = $F('contratante');
+  //fim plugin AssinaturaAcordo
+]]>
+      </add>
+    </operation>
+    <operation>
+      <search regex="true"><![CDATA[(\$\(\'ac10_obs\'\).value\s*=\s*\"\";)]]></search>
+      <add>
+        <![CDATA[$1  
+  $('contratante').value        = "";
+  $('representante').value      = "";]]>
+      </add>
+    </operation>               
+  </file>
+  
+  <file path='con4_contratosmovimento.RPC.php'>
+    <operation>
+      <search regex="true"><![CDATA[(\$oAssinatura->save\(\);)]]></search>
+      <add>
+        <![CDATA[
+        //plugin AcordoAssinatura
+        $oAssinatura->setContratante($oParam->contratante);
+      	$oAssinatura->setRepresentante(utf8_decode($oParam->representante));
+      	//fim plugin AcordoAssinatura
+      	
+      	$1]]>
+      </add>
+    </operation>        
+  </file>  
+  
+  <file path='model/AcordoAssinatura.model.php'>
+    <operation>
+    <search regex="true"><![CDATA[(protected\s*\$iTipo .*;)]]></search>
+      <add>
+        <![CDATA[$1
+        
+   //plugin AcordoAssinatura	
+   public $iContratante = null;
+   public $sRepresentanteEmpresa = null;
+   //fim plugin AcordoAssinatura
+        ]]>
+      </add>  
+    </operation>   
+    <operation>
+      <search regex="true"><![CDATA[(public function save\(.*\)\s*\{)]]></search>
+      <add>
+        <![CDATA[
+  //plugin AcordoAssinatura
+  public function setContratante($iContratante) {
+    $this->iContratante = $iContratante;
+  }
+  
+  public function setRepresentante($sRepresentante) {
+  	$this->sRepresentante = $sRepresentante;
+  }
+  //fim plugin AcordoAssinatura
+  
+  $1
+]]>
+      </add>
+    </operation>
+    <operation>
+      <search regex="true"><![CDATA[(parent::save\(\);\n*\s*\$iCodigoAcordo\s*=\s*\$this->getAcordo\(\);)]]></search>
+      <add>
+        <![CDATA[$1
+        
+    //plugin AcordoAssinatura
+    $oDaoAcordoAssinatura = db_utils::getDao("acordoassinatura");
+    $oDaoAcordoAssinatura->acordomovimentacao   = parent::getCodigo();
+    $oDaoAcordoAssinatura->contratante          = $this->iContratante; 
+    $oDaoAcordoAssinatura->representante        = $this->sRepresentante;
+    $oDaoAcordoAssinatura->incluir(null);
+    if ($oDaoAcordoAssinatura->erro_status == 0) {
+    	throw new Exception($oDaoAcordoAssinatura->erro_msg);
+    }
+    //fim plugin AcordoAssinatura
+]]>
+      </add>
+    </operation>        
+  </file>
+  
+  <file path='con2_relatorioacordos002.php'>
+    <operation>
+    <search regex="true"><![CDATA[(\$sSqlAcordo\s*=\s*\$clacordo->sql_query_completo_posicao\(.*\);)]]></search>
+      <add>
+        <![CDATA[$1
+        
+//plugin AcordoAssinatura        
+$sSqlAcordo = "select dados.*,representante, contratante, rh01_numcgm, cgm_pessoal.z01_nome as contratante_nome 
+                 from ({$sSqlAcordo}) as dados
+                      left join acordomovimentacao        on ac10_acordo                    = ac16_sequencial 
+                                                         and ac10_acordomovimentacaotipo    = 2 
+                      left join plugins.acordoassinatura  on acordomovimentacao             = ac10_sequencial 
+                      left join acordomovimentacaocancela on ac25_acordomovimentacaocancela = ac10_sequencial 
+                      left join rhpessoal                 on rh01_regist                    = contratante 
+                      left join cgm as cgm_pessoal        on cgm_pessoal.z01_numcgm         = rhpessoal.rh01_numcgm
+                where not exists (select 1 
+                                    from acordomovimentacaocancela 
+                                   where ac25_acordomovimentacaocancela = ac10_sequencial)";
+//fim plugin AcordoAssinatura
+]]>
+      </add>  
+    </operation>  
+    <operation>
+    <search regex="true"><![CDATA[(\$iCategoriaAcordo\s*=\s*0;)]]></search>
+      <add>
+        <![CDATA[
+  //plugin AcordoAssinatura
+  $oDadosAcordo->contratante        =$oAcordoCompleto->contratante;
+  $oDadosAcordo->contratante_nome   =$oAcordoCompleto->contratante_nome;
+  $oDadosAcordo->representante      =$oAcordoCompleto->representante;
+  //fim plugin AcordoAssinatura
+  
+  $1]]>
+      </add>  
+    </operation>  
+    <operation>
+    <search regex="true"><![CDATA[(\$oPdf->MultiCell\(.*\$oDado->getComissaoMembros.*\);)]]></search>
+      <add>
+        <![CDATA[$1
+        
+  //plugin AcordoAssinatura
+  if ($oDado->contratante != "") {
+    $oPdf->SetFont('Arial','B',$iFonte);
+    $oPdf->Cell(35 ,$iAlt,'Contratante: ',0,0,'R',0);
+    $oPdf->SetFont('Arial','',$iFonte-1);
+    $oPdf->Cell(35 ,$iAlt,$oDado->contratante." - ".$oDado->contratante_nome,0,1,'L',0);
+    
+    $oPdf->SetFont('Arial','B',$iFonte);
+    $oPdf->Cell(35 ,$iAlt,'Representante: ',0,0,'R',0);
+    $oPdf->SetFont('Arial','',$iFonte-1);
+    $oPdf->Cell(35 ,$iAlt,$oDado->representante,0,1,'L',0);
+    $oPdf->ln();
+  }
+  //fim plugin AcordoAssinatura]]>
+      </add>  
+    </operation>          
+  </file>  
+  
+  <file path='aco1_acordo004.php'>
+    <operation>
+      <search regex="true"><![CDATA[include.*frmacordo.*]]></search>
+      <add>
+        <![CDATA[include(modification("forms/db_frmacordo.php"));]]>
+      </add>
+    </operation>
+  </file>
+
+</modification>
