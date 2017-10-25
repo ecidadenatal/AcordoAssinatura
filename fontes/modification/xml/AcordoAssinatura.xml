@@ -11,21 +11,6 @@
         <![CDATA[$1 3]]>
       </add>
     </operation>        
-    
-    <operation>
-      <search regex="true"><![CDATA[placeh.*Ano']]></search>
-      <add>
-        <![CDATA[placeholder='Número/Ano-XX']]>
-      </add>
-    </operation>
-
-    <operation>
-      <search regex="true"><![CDATA[this.value.*replace.*'\$2\$3\$4'\)]]></search>
-      <add>
-        <![CDATA[this.value = this.value.replace(/[^0-9\/\-]/g, '').replace(/(\/?)([0-9]*)(\/?)([0-9]{0,4})(\-?)([0-9]{0,2})(.*)(\/?)/,'\$2\$3\$4\$5\$6')]]>
-      </add>
-    </operation>
-    
   </file>  
   
   <file path='aco4_assinaturacontratosinclusao001.php'>
@@ -296,13 +281,4 @@ $sSqlAcordo = "select dados.*,representante, contratante, rh01_numcgm, cgm_pesso
     </operation>          
   </file>  
   
-  <file path='aco1_acordo004.php'>
-    <operation>
-      <search regex="true"><![CDATA[include.*frmacordo.*]]></search>
-      <add>
-        <![CDATA[include(modification("forms/db_frmacordo.php"));]]>
-      </add>
-    </operation>
-  </file>
-
 </modification>
